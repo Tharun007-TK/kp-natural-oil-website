@@ -194,6 +194,10 @@ INSERT INTO products (name, description, price, image_url) VALUES
 - Check that product_id exists in products table
 - Verify rating is between 1-5
 - Ensure all required fields are filled
+- **If you get "Could not find the 'user_name' column" error:**
+  - Your reviews table might have been created with a different schema
+  - Run the SQL in `supabase-fix-reviews-column.sql` to rename the column
+  - Or drop and recreate the reviews table with the correct schema from `supabase-migration.sql`
 
 ## Next Steps
 

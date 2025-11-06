@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabase-client";
 
-// GET reviews for a specific product
+// GET reviews - all reviews or for a specific product
 export async function GET(request: NextRequest) {
   try {
     const supabase = getSupabase();
@@ -15,18 +15,19 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const productId = searchParams.get("product_id");
 
-    if (!productId) {
-      return NextResponse.json(
-        { error: "Product ID is required" },
-        { status: 400 }
-      );
+    let query = supabase
+      .from("reviews")
+      .select(
+        "id, product_id, user_id, rating, title, comment, verified, reviewer_name, created_at, products(name, image_url)"
+      )
+      .order("created_at", { ascending: false });
+
+    // If product_id is provided, filter by it
+    if (productId) {
+      query = query.eq("product_id", productId);
     }
 
-    const { data: reviews, error } = await supabase
-      .from("reviews")
-      .select("*")
-      .eq("product_id", productId)
-      .order("created_at", { ascending: false });
+    const { data: reviews, error } = await query;
 
     if (error) {
       console.error("Error fetching reviews:", error);
@@ -36,7 +37,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ reviews });
+    // Map reviewer_name to user_name for frontend compatibility
+    const formattedReviews = reviews?.map((review: any) => ({
+      ...review,
+      user_name: review.reviewer_name || "Anonymous",
+    }));
+
+    return NextResponse.json({ reviews: formattedReviews });
   } catch (error) {
     console.error("Unexpected error:", error);
     return NextResponse.json(
@@ -58,7 +65,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { product_id, user_name, rating, comment } = body;
+    const { product_id, user_name, rating, comment, title } = body;
 
     if (!product_id || !user_name || !rating || !comment) {
       return NextResponse.json(
@@ -81,8 +88,10 @@ export async function POST(request: NextRequest) {
       .from("reviews")
       .insert({
         product_id,
-        user_name,
+        user_id: null, // Null for anonymous reviews
+        reviewer_name: user_name, // Store the user's name
         rating: parseInt(rating),
+        title: title || null,
         comment,
       })
       .select()

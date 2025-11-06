@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -11,72 +11,31 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Star, ArrowLeft } from "lucide-react";
+import { Star, ArrowLeft, Loader2 } from "lucide-react";
 import { useLanguage } from "@/components/language-provider";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageToggle } from "@/components/language-toggle";
 
 interface Review {
-  id: number;
-  name: string;
+  id: string;
+  user_name: string;
   rating: number;
   comment: string;
-  date: string;
+  created_at: string;
+  product_id: string;
+  products?: {
+    name: string;
+    image_url: string | null;
+  };
 }
 
 export default function ReviewsPage() {
   const { t } = useLanguage();
-  const [reviews, setReviews] = useState<Review[]>([
-    {
-      id: 1,
-      name: "Priya Sharma",
-      rating: 5,
-      comment:
-        "Amazing results! My hair feels so much healthier after using KP Natural Hairoils for 2 months.",
-      date: "2024-01-15",
-    },
-    {
-      id: 2,
-      name: "Rajesh Kumar",
-      rating: 5,
-      comment:
-        "No more hair fall! The natural ingredients really work. Highly recommended.",
-      date: "2024-01-10",
-    },
-    {
-      id: 3,
-      name: "Meera Patel",
-      rating: 4,
-      comment:
-        "Good quality oil. My hair is shinier and softer now. Will continue using it.",
-      date: "2024-01-05",
-    },
-    {
-      id: 4,
-      name: "Anita Singh",
-      rating: 5,
-      comment:
-        "Excellent product! My hair has become so much stronger and healthier. Love the natural ingredients.",
-      date: "2024-01-20",
-    },
-    {
-      id: 5,
-      name: "Vikram Reddy",
-      rating: 5,
-      comment:
-        "Best hair oil I've ever used. My hair fall has reduced significantly. Highly recommend to everyone!",
-      date: "2024-01-18",
-    },
-    {
-      id: 6,
-      name: "Sunita Agarwal",
-      rating: 4,
-      comment:
-        "Good quality and natural. My hair feels softer and looks shinier. Will definitely buy again.",
-      date: "2024-01-12",
-    },
-  ]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [defaultProductId, setDefaultProductId] = useState<string | null>(null);
 
   const [newReview, setNewReview] = useState({
     name: "",
@@ -85,17 +44,67 @@ export default function ReviewsPage() {
   });
   const [showForm, setShowForm] = useState(false);
 
-  const handleSubmitReview = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetchReviewsAndProducts();
+  }, []);
+
+  const fetchReviewsAndProducts = async () => {
+    setLoading(true);
+    try {
+      // Fetch all reviews
+      const reviewsRes = await fetch("/api/reviews");
+      if (reviewsRes.ok) {
+        const data = await reviewsRes.json();
+        setReviews(data.reviews || []);
+      }
+
+      // Fetch products to get a default one for general reviews
+      const productsRes = await fetch("/api/products");
+      if (productsRes.ok) {
+        const data = await productsRes.json();
+        if (data.products && data.products.length > 0) {
+          // Use the first product as default for general reviews
+          setDefaultProductId(data.products[0].id);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newReview.name && newReview.comment) {
-      const review: Review = {
-        id: reviews.length + 1,
-        ...newReview,
-        date: new Date().toISOString().split("T")[0],
-      };
-      setReviews([review, ...reviews]);
-      setNewReview({ name: "", rating: 5, comment: "" });
-      setShowForm(false);
+    if (!newReview.name || !newReview.comment || !defaultProductId) {
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const response = await fetch("/api/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          product_id: defaultProductId,
+          user_name: newReview.name,
+          rating: newReview.rating,
+          comment: newReview.comment,
+        }),
+      });
+
+      if (response.ok) {
+        setNewReview({ name: "", rating: 5, comment: "" });
+        setShowForm(false);
+        // Refresh reviews
+        await fetchReviewsAndProducts();
+      } else {
+        console.error("Failed to submit review");
+      }
+    } catch (error) {
+      console.error("Error submitting review:", error);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -180,15 +189,24 @@ export default function ReviewsPage() {
                     <Button
                       type="button"
                       onClick={handleDiscardReview}
-                      className="bg-green-600 hover:bg-green-700 text-white text-sm sm:text-base px-3 sm:px-4 py-2"
+                      variant="outline"
+                      className="text-sm sm:text-base px-3 sm:px-4 py-2"
                     >
                       Discard
                     </Button>
                     <Button
                       type="submit"
+                      disabled={submitting || !defaultProductId}
                       className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm sm:text-base px-3 sm:px-4 py-2"
                     >
-                      {t("reviews.submit")}
+                      {submitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Submitting...
+                        </>
+                      ) : (
+                        t("reviews.submit")
+                      )}
                     </Button>
                   </div>
                 </form>
@@ -197,38 +215,57 @@ export default function ReviewsPage() {
           )}
 
           {/* Reviews Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {reviews.map((review) => (
-              <Card
-                key={review.id}
-                className="border-border bg-card hover:shadow-lg transition-shadow"
-              >
-                <CardHeader className="p-4 sm:p-6">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-base sm:text-lg font-serif font-bold text-card-foreground">
-                      {review.name}
-                    </CardTitle>
-                    <div className="flex">
-                      {[...Array(review.rating)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className="h-3 w-3 sm:h-4 sm:w-4 fill-accent text-accent"
-                        />
-                      ))}
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <Loader2 className="w-12 h-12 animate-spin text-primary" />
+            </div>
+          ) : reviews.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+              {reviews.map((review) => (
+                <Card
+                  key={review.id}
+                  className="border-border bg-card hover:shadow-lg transition-shadow"
+                >
+                  <CardHeader className="p-4 sm:p-6">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-base sm:text-lg font-serif font-bold text-card-foreground">
+                        {review.user_name}
+                      </CardTitle>
+                      <div className="flex">
+                        {[...Array(review.rating)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className="h-3 w-3 sm:h-4 sm:w-4 fill-accent text-accent"
+                          />
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                  <CardDescription className="text-xs sm:text-sm text-muted-foreground">
-                    {new Date(review.date).toLocaleDateString()}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-4 sm:p-6 pt-0">
-                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                    "{review.comment}"
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                    <CardDescription className="text-xs sm:text-sm text-muted-foreground">
+                      {new Date(review.created_at).toLocaleDateString()}
+                      {review.products && (
+                        <span className="ml-2 text-primary">
+                          • {review.products.name}
+                        </span>
+                      )}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-4 sm:p-6 pt-0">
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                      "{review.comment}"
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <Card className="max-w-md mx-auto">
+              <CardContent className="py-12 text-center">
+                <p className="text-muted-foreground">
+                  No reviews yet. Be the first to leave a review!
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </main>
     </div>
