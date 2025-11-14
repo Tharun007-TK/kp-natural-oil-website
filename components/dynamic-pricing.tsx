@@ -10,7 +10,7 @@ interface PricingData {
   isOfferActive: boolean;
 }
 
-export function DynamicPricing() {
+export default function DynamicPricing() {
   // Start with null so we don't show a stale hard-coded price that later "flickers" to the real value.
   const [pricingData, setPricingData] = useState<PricingData | null>(null);
 

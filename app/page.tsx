@@ -29,7 +29,7 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageToggle } from "@/components/language-toggle";
 import { WhatsAppButton } from "@/components/whatsapp-button";
-import { DynamicPricing } from "@/components/dynamic-pricing";
+import DynamicPricing from "@/components/dynamic-pricing";
 import { useLanguage } from "@/components/language-provider";
 import Link from "next/link";
 import { ProductCarousel } from "@/components/product-carousel";
