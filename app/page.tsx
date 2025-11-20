@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -25,17 +24,17 @@ import {
   Nut,
   FlaskConical,
   Ban,
+  ArrowRight,
 } from "lucide-react";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { LanguageToggle } from "@/components/language-toggle";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 import DynamicPricing from "@/components/dynamic-pricing";
 import { useLanguage } from "@/components/language-provider";
 import Link from "next/link";
+import Image from "next/image";
 import { ProductCarousel } from "@/components/product-carousel";
 
 export default function HomePage() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   const handleWhatsAppClick = () => {
     const message = encodeURIComponent(
@@ -45,72 +44,45 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
-      <section className="relative py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24 overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: "url(/coconut-palm-grove.jpg)",
-          }}
-        />
-        <div className="absolute inset-0 bg-black/20"></div>
+    <div className="min-h-screen bg-background overflow-x-hidden selection:bg-primary/20 selection:text-primary">
+      {/* Hero Section */}
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/coconut-palm-grove.webp"
+            alt="Coconut Palm Grove"
+            fill
+            priority
+            className="object-cover opacity-90"
+            quality={90}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent z-10" />
+        </div>
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
-            <div className="space-y-4 sm:space-y-6 md:space-y-8 text-center md:text-left">
-              <div
-                className="inline-flex items-center px-3 py-2 text-sm font-medium text-white shadow-lg rounded-full transition-colors duration-300"
-                style={{
-                  backgroundColor: "#10b981",
-                  color: "#ffffff",
-                  border: "none",
-                  backgroundImage: "none",
-                  backdropFilter: "none",
-                  opacity: "1",
-                }}
-              >
-                <Sparkles className="w-4 h-4 mr-2" />
+        <div className="container relative z-20 py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <div className="space-y-8 text-center lg:text-left animate-in fade-in slide-in-from-bottom-8 duration-1000">
+              <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-medium tracking-wide">
+                <Sparkles className="w-4 h-4 mr-2 text-secondary" />
                 {t("hero.badge")}
               </div>
 
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-serif font-black leading-tight">
-                <span
-                  className="text-white drop-shadow-lg"
-                  style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-                >
-                  {t("hero.title")}
-                </span>
-                <br />
-                <span
-                  className="text-green-100 drop-shadow-lg"
-                  style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-                >
+              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-serif font-bold leading-[1.1] text-white tracking-tight text-balance">
+                {t("hero.title")}{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-emerald-200">
                   {t("hero.brand")}
                 </span>
               </h1>
 
-              <p
-                className="text-sm sm:text-base md:text-lg text-white leading-relaxed font-medium max-w-lg mx-auto md:mx-0 drop-shadow-lg"
-                style={{ textShadow: "1px 1px 3px rgba(0,0,0,0.7)" }}
-              >
+              <p className="text-lg sm:text-xl text-white/90 leading-relaxed max-w-xl mx-auto lg:mx-0 font-light text-balance">
                 {t("hero.description")}
               </p>
 
-              <div className="glass p-4 sm:p-6 md:p-8 rounded-2xl border border-primary/20 relative overflow-hidden bg-white/10 backdrop-blur-md">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5"></div>
-                <div className="relative">
-                  <DynamicPricing />
-                  <p className="text-white font-medium drop-shadow-sm bg-black/30 rounded-lg px-3 py-2 inline-block text-sm">
-                    {t("hero.usage")}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center md:justify-start">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
                 <Button
                   size="lg"
                   onClick={handleWhatsAppClick}
-                  className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white shadow-xl hover:shadow-2xl transition-colors duration-300 px-6 py-3 text-base font-semibold w-full sm:w-auto"
+                  className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 h-14 text-lg shadow-lg shadow-primary/20 transition-all hover:scale-105"
                 >
                   <MessageCircle className="w-5 h-5 mr-2" />
                   {t("button.order")}
@@ -119,492 +91,275 @@ export default function HomePage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="group border-2 border-white text-white bg-transparent shadow-lg transition-colors duration-300 px-6 py-3 text-base font-semibold w-full sm:w-auto hover:border-accent hover:text-accent hover:bg-white/10"
+                    className="bg-transparent border-white/30 text-white hover:bg-white/10 hover:border-white rounded-full px-8 h-14 text-lg backdrop-blur-sm transition-all"
                   >
-                    <Sparkles className="w-5 h-5 mr-2 group-hover:rotate-12 group-hover:scale-110 transition-transform duration-300" />
                     {t("button.learn")}
+                    <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
                 </Link>
               </div>
 
-              <div className="flex flex-row items-center gap-3 pt-4 justify-center md:justify-start">
-                <div className="flex items-center gap-2">
-                  <div className="flex">
+              <div className="flex items-center gap-4 justify-center lg:justify-start pt-4">
+                <div className="flex -space-x-2">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="w-8 h-8 rounded-full border-2 border-black/20 bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                      <Users className="w-4 h-4 text-white" />
+                    </div>
+                  ))}
+                </div>
+                <div className="flex flex-col text-left">
+                  <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className="h-4 w-4 sm:h-5 sm:w-5 fill-accent text-accent"
-                      />
+                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                     ))}
                   </div>
-                  <span className="text-white font-medium drop-shadow-sm text-sm">
-                    4.9/5 from 500+ reviews
-                  </span>
+                  <span className="text-white/80 text-sm font-medium">4.9/5 from 500+ reviews</span>
                 </div>
               </div>
             </div>
 
-            <div className="relative mt-8 md:mt-0">
-              <div className="flex justify-center">
-                <ProductCarousel />
+            <div className="relative lg:h-[600px] flex items-center justify-center animate-in fade-in zoom-in duration-1000 delay-300">
+              {/* Glass Card for Pricing */}
+              <div className="absolute -right-4 top-10 z-30 glass p-6 rounded-2xl max-w-xs hidden lg:block animate-float">
+                <DynamicPricing />
+                <p className="text-xs text-muted-foreground mt-2 text-center font-medium">
+                  {t("hero.usage")}
+                </p>
               </div>
+              <ProductCarousel />
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-16 sm:py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-muted/30 to-background"></div>
-        <div className="container mx-auto px-4 relative">
-          <div className="text-center mb-12 sm:mb-20">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-black mb-4 sm:mb-6 text-foreground">
+      {/* Ingredients Section - Minimalist Cards */}
+      <section className="py-24 bg-muted/30">
+        <div className="container">
+          <div className="text-center mb-16 space-y-4">
+            <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground">
               {t("ingredients.title")}
             </h2>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto font-medium leading-relaxed px-4">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-light">
               {t("ingredients.subtitle")}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
                 name: t("ingredient.hibiscus"),
-                image: "/red-hibiscus-ingredient.png",
+                image: "/red-hibiscus-ingredient.webp",
                 benefit: t("ingredient.hibiscus.benefit"),
                 icon: Flower2,
-                gradient: "from-red-500/20 to-pink-500/20",
+                color: "bg-red-50 text-red-600",
               },
               {
                 name: t("ingredient.coconut"),
-                image: "/coconut-oil-natural-organic.png",
+                image: "/coconut-oil-natural-organic.webp",
                 benefit: t("ingredient.coconut.benefit"),
                 icon: Nut,
-                gradient: "from-amber-500/20 to-orange-500/20",
+                color: "bg-amber-50 text-amber-600",
               },
               {
                 name: t("ingredient.rosemary"),
                 image: "/fresh-rosemary.png",
                 benefit: t("ingredient.rosemary.benefit"),
                 icon: Leaf,
-                gradient: "from-emerald-500/20 to-teal-500/20",
+                color: "bg-emerald-50 text-emerald-600",
               },
               {
                 name: t("ingredient.secret"),
-                image: "/natural-herbs-blend.png",
+                image: "/natural-herbs-blend.webp",
                 benefit: t("ingredient.secret.benefit"),
                 icon: FlaskConical,
-                gradient: "from-purple-500/20 to-indigo-500/20",
+                color: "bg-purple-50 text-purple-600",
               },
               {
                 name: t("ingredient.nosulfur"),
-                image: "/natural-hair-oil.png",
+                image: "/natural-hair-oil.webp",
                 benefit: t("ingredient.nosulfur.benefit"),
                 icon: Ban,
-                gradient: "from-blue-500/20 to-cyan-500/20",
+                color: "bg-blue-50 text-blue-600",
               },
-            ].map((ingredient, index) => (
-              <Card
-                key={index}
-                className="glass border-border/50 hover:shadow-xl transition-shadow duration-300 text-center group relative overflow-hidden"
-              >
-                <div
-                  className={`absolute inset-0 bg-gradient-to-br ${ingredient.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
-                ></div>
-                <CardHeader className="pb-2 sm:pb-4 relative">
-                  <div className="relative mb-2 sm:mb-4 md:mb-6">
-                    <div className="relative">
-                      <img
-                        src={ingredient.image || "/placeholder.svg"}
-                        alt={ingredient.name}
-                        className="w-12 h-12 sm:w-20 sm:h-20 md:w-28 md:h-28 mx-auto rounded-lg sm:rounded-2xl object-cover shadow-lg group-hover:shadow-xl transition-shadow duration-300"
-                      />
-                      <div className="absolute inset-0 rounded-lg sm:rounded-2xl bg-gradient-to-br from-transparent to-primary/10 group-hover:to-primary/20 transition-all duration-300"></div>
-                    </div>
-                    <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 md:-top-3 md:-right-3 text-sm sm:text-2xl md:text-3xl bg-gradient-to-r from-primary/20 to-accent/20 backdrop-blur-sm rounded-lg sm:rounded-2xl p-1 sm:p-2 md:p-3 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                      {/** vector icon for minimalist look */}
-                      <ingredient.icon className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7 text-foreground" />
-                    </div>
+            ].map((item, idx) => (
+              <div key={idx} className="group relative bg-card hover:bg-white rounded-3xl p-6 transition-all duration-300 hover:shadow-xl border border-border/50">
+                <div className="relative h-48 mb-6 overflow-hidden rounded-2xl bg-muted/50">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                </div>
+                <div className="flex items-start justify-between mb-3">
+                  <h3 className="text-xl font-serif font-bold">{item.name}</h3>
+                  <div className={`p-2 rounded-full ${item.color}`}>
+                    <item.icon className="w-5 h-5" />
                   </div>
-                  <CardTitle className="font-serif font-black text-xs sm:text-lg md:text-xl mb-0 sm:mb-1 md:mb-1 text-card-foreground">
-                    {ingredient.name}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-1 sm:pt-0 relative px-2 sm:px-6 -mt-2 sm:-mt-1">
-                  <p className="text-muted-foreground leading-relaxed font-medium text-[10px] sm:text-sm md:text-base">
-                    {ingredient.benefit}
-                  </p>
-                </CardContent>
-              </Card>
+                </div>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {item.benefit}
+                </p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="pt-4 sm:pt-8 pb-16 sm:pb-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-background to-muted/30"></div>
-        <div className="container mx-auto px-4 relative">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-6 sm:mb-12">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-black mb-4 sm:mb-6 text-foreground">
+      {/* Farm Section - Asymmetrical Grid */}
+      <section className="py-24 overflow-hidden">
+        <div className="container">
+          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <div className="space-y-6">
+              <Badge variant="outline" className="rounded-full px-4 py-1 border-primary/20 text-primary bg-primary/5">
+                From Our Farm
+              </Badge>
+              <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground leading-tight">
                 {t("farm.title")}
               </h2>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
-              <Card className="glass border-border/50 overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-500 p-0">
-                <div className="relative h-48 sm:h-64">
-                  <img
-                    src="/coconut-farm-plantation.png"
-                    alt="KP Coconut Farm Plantation"
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                  <div className="absolute bottom-4 left-4 text-white">
-                    <h3 className="font-serif font-bold text-base sm:text-lg">
-                      Our Coconut Farm
-                    </h3>
-                    <p className="text-xs sm:text-sm opacity-90">
-                      Fresh from our plantation
-                    </p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="glass border-border/50 overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-500 p-0">
-                <div className="relative h-48 sm:h-64">
-                  <img
-                    src="/fresh-rosemary.png"
-                    alt="Rosemary Cultivation at KP Farm"
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                  <div className="absolute bottom-4 left-4 text-white">
-                    <h3 className="font-serif font-bold text-base sm:text-lg">
-                      Rosemary Cultivation
-                    </h3>
-                    <p className="text-xs sm:text-sm opacity-90">
-                      Fresh rosemary from our farm
-                    </p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="glass border-border/50 overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-500 p-0">
-                <div className="relative h-48 sm:h-64">
-                  <img
-                    src="/coconut-farm-harvest.png"
-                    alt="Coconut Harvesting Process"
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                  <div className="absolute bottom-4 left-4 text-white">
-                    <h3 className="font-serif font-bold text-base sm:text-lg">
-                      Harvesting Process
-                    </h3>
-                    <p className="text-xs sm:text-sm opacity-90">
-                      Hand-picked coconuts
-                    </p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="glass border-border/50 overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-500 p-0">
-                <div className="relative h-48 sm:h-64">
-                  <img
-                    src="/coconut-shells-farm.png"
-                    alt="Coconut Processing Stage"
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                  <div className="absolute bottom-4 left-4 text-white">
-                    <h3 className="font-serif font-bold text-base sm:text-lg">
-                      Processing Stage
-                    </h3>
-                    <p className="text-xs sm:text-sm opacity-90">
-                      Fresh coconut extraction
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            </div>
-
-            <Card className="glass border-border/50 overflow-hidden shadow-2xl">
-              <div className="grid lg:grid-cols-2 gap-0">
-                <div className="relative h-64 sm:h-80 lg:h-auto">
-                  <img
-                    src="/coconut-farm-plantation.png"
-                    alt="Fresh Coconut Harvesting at KP Farm"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent"></div>
-                </div>
-                <div className="p-6 sm:p-8 lg:p-12 flex items-center">
-                  <div className="space-y-4 sm:space-y-6">
-                    <div className="flex items-center gap-3 mb-4 sm:mb-6">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-r from-primary to-accent p-2 sm:p-3 shadow-lg">
-                        <Leaf className="h-6 w-6 text-white" />
-                      </div>
-                      <h3 className="text-xl sm:text-2xl font-serif font-black text-card-foreground">
-                        {t("farm.subtitle")}
-                      </h3>
-                    </div>
-                    <p className="text-muted-foreground leading-relaxed font-medium text-base sm:text-lg">
-                      {t("farm.description")}
-                    </p>
-                    <div className="flex items-center gap-4 pt-4">
-                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-3 sm:px-4 py-2 font-medium text-sm">
-                        <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
-                        {t("farm.badge")}
-                      </Badge>
-                    </div>
-                  </div>
+              <p className="text-lg text-muted-foreground font-light leading-relaxed">
+                {t("farm.description")}
+              </p>
+              <div className="flex items-center gap-4 pt-2">
+                <div className="flex items-center gap-2 text-primary font-medium">
+                  <CheckCircle className="w-5 h-5" />
+                  {t("farm.badge")}
                 </div>
               </div>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="benefits"
-        className="py-16 sm:py-24 relative overflow-hidden"
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-background to-muted/30"></div>
-        <div className="container mx-auto px-4 relative">
-          <div className="text-center mb-12 sm:mb-20">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-black mb-4 sm:mb-6 text-foreground">
-              {t("benefits.title")}
-            </h2>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto font-medium leading-relaxed px-4">
-              {t("benefits.subtitle")}
-            </p>
+            </div>
+            <div className="relative h-[400px] rounded-3xl overflow-hidden shadow-2xl">
+              <Image
+                src="/coconut-farm-plantation.webp"
+                alt="Farm"
+                fill
+                className="object-cover"
+              />
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              {
-                icon: Shield,
-                title: t("benefit.gentle.title"),
-                description: t("benefit.gentle.desc"),
-                gradient: "from-blue-500 to-cyan-500",
-              },
-              {
-                icon: Heart,
-                title: t("benefit.nourish.title"),
-                description: t("benefit.nourish.desc"),
-                gradient: "from-red-500 to-pink-500",
-              },
-              {
-                icon: Leaf,
-                title: t("benefit.natural.title"),
-                description: t("benefit.natural.desc"),
-                gradient: "from-green-500 to-emerald-500",
-              },
-              {
-                icon: CheckCircle,
-                title: t("benefit.results.title"),
-                description: t("benefit.results.desc"),
-                gradient: "from-primary to-accent",
-              },
-              {
-                icon: Users,
-                title: t("benefit.types.title"),
-                description: t("benefit.types.desc"),
-                gradient: "from-purple-500 to-indigo-500",
-              },
-              {
-                icon: Award,
-                title: t("benefit.quality.title"),
-                description: t("benefit.quality.desc"),
-                gradient: "from-amber-500 to-orange-500",
-              },
-            ].map((benefit, index) => (
-              <Card
-                key={index}
-                className="glass border-border/50 hover:shadow-xl transition-shadow duration-300 group relative overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <CardHeader className="relative">
-                  <div
-                    className={`w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-r ${benefit.gradient} p-3 sm:p-4 mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
-                  >
-                    <benefit.icon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
-                  </div>
-                  <CardTitle className="font-serif font-black text-lg sm:text-xl text-card-foreground">
-                    {benefit.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="relative">
-                  <CardDescription className="text-muted-foreground leading-relaxed font-medium text-sm sm:text-base">
-                    {benefit.description}
-                  </CardDescription>
-                </CardContent>
-              </Card>
+              "/fresh-rosemary.png",
+              "/coconut-farm-harvest.webp",
+              "/coconut-shells-farm.webp",
+              "/coconut-farm-plantation.webp"
+            ].map((src, i) => (
+              <div key={i} className="relative h-40 md:h-64 rounded-2xl overflow-hidden group">
+                <Image src={src} alt="Farm process" fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section id="contact" className="py-16 sm:py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-muted/30 to-background"></div>
-        <div className="container mx-auto px-4 relative">
-          <div className="text-center mb-12 sm:mb-20">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-black mb-4 sm:mb-6 text-foreground">
-              {t("contact.title")}
-            </h2>
+      {/* Benefits Section - Clean Grid */}
+      <section className="py-24 bg-primary/5">
+        <div className="container">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4">{t("benefits.title")}</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">{t("benefits.subtitle")}</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto">
-            <Card className="glass border-border/50 hover:shadow-2xl transition-all duration-500 hover:scale-105 text-center group relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <CardHeader className="relative">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 p-3 sm:p-4 mx-auto mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                  <Phone className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { icon: Shield, title: t("benefit.gentle.title"), desc: t("benefit.gentle.desc") },
+              { icon: Heart, title: t("benefit.nourish.title"), desc: t("benefit.nourish.desc") },
+              { icon: Leaf, title: t("benefit.natural.title"), desc: t("benefit.natural.desc") },
+              { icon: CheckCircle, title: t("benefit.results.title"), desc: t("benefit.results.desc") },
+              { icon: Users, title: t("benefit.types.title"), desc: t("benefit.types.desc") },
+              { icon: Award, title: t("benefit.quality.title"), desc: t("benefit.quality.desc") },
+            ].map((item, i) => (
+              <div key={i} className="bg-background p-8 rounded-3xl shadow-sm hover:shadow-md transition-shadow border border-border/50">
+                <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 text-primary">
+                  <item.icon className="w-6 h-6" />
                 </div>
-                <CardTitle className="font-serif font-black text-lg sm:text-xl text-card-foreground">
-                  {t("contact.phone")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="relative">
-                <p className="text-muted-foreground font-medium text-base sm:text-lg">
-                  6381248615
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="glass border-border/50 hover:shadow-2xl transition-all duration-500 hover:scale-105 text-center group relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <CardHeader className="relative">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-r from-pink-500 to-purple-500 p-3 sm:p-4 mx-auto mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                  <Instagram className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
-                </div>
-                <CardTitle className="font-serif font-black text-lg sm:text-xl text-card-foreground">
-                  {t("contact.instagram")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="relative">
-                <a
-                  href="https://instagram.com/kpnaturals.official"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:text-accent transition-colors font-medium text-base sm:text-lg"
-                >
-                  @kpnaturals.official
-                </a>
-              </CardContent>
-            </Card>
-
-            <Card className="glass border-border/50 hover:shadow-2xl transition-all duration-500 hover:scale-105 text-center group relative overflow-hidden sm:col-span-2 lg:col-span-1">
-              <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <CardHeader className="relative">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 p-3 sm:p-4 mx-auto mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                  <MessageCircle className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
-                </div>
-                <CardTitle className="font-serif font-black text-lg sm:text-xl text-card-foreground">
-                  {t("contact.whatsapp")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="relative">
-                <Button
-                  onClick={handleWhatsAppClick}
-                  className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
-                >
-                  <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
-                  {t("contact.whatsapp")}
-                </Button>
-              </CardContent>
-            </Card>
+                <h3 className="text-xl font-serif font-bold mb-3">{item.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <footer className="relative py-12 sm:py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-muted to-muted/80"></div>
-        <div className="container mx-auto px-4 relative">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            <div className="sm:col-span-2 lg:col-span-1">
-              <div className="flex items-center gap-3 mb-4 sm:mb-6 justify-center sm:justify-start">
-                <img
-                  src="/kp-header-logo.png"
-                  alt="KP Naturals Logo"
-                  className="h-8 sm:h-10 w-8 sm:w-10 object-cover rounded-full dark:brightness-110 dark:contrast-110"
-                />
-                <h3 className="text-lg sm:text-xl font-serif font-black text-foreground">
-                  KP Naturals
-                </h3>
+      {/* Contact Section */}
+      <section className="py-24">
+        <div className="container max-w-4xl">
+          <div className="glass rounded-[2.5rem] p-8 md:p-12 text-center relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-secondary to-accent" />
+
+            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-8">{t("contact.title")}</h2>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                  <Phone className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="font-bold text-lg">{t("contact.phone")}</p>
+                  <p className="text-muted-foreground">6381248615</p>
+                </div>
               </div>
-              <p className="text-muted-foreground mb-4 font-medium leading-relaxed text-center sm:text-left text-sm sm:text-base">
-                {t("footer.tagline")}
-              </p>
+
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-14 h-14 rounded-full bg-pink-50 flex items-center justify-center text-pink-600">
+                  <Instagram className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="font-bold text-lg">{t("contact.instagram")}</p>
+                  <a href="https://instagram.com/kpnaturals.official" className="text-muted-foreground hover:text-primary transition-colors">@kpnaturals.official</a>
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-14 h-14 rounded-full bg-green-50 flex items-center justify-center text-green-600">
+                  <MessageCircle className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="font-bold text-lg">{t("contact.whatsapp")}</p>
+                  <Button variant="link" onClick={handleWhatsAppClick} className="p-0 h-auto text-muted-foreground hover:text-primary">Chat with us</Button>
+                </div>
+              </div>
             </div>
-            <div className="text-center sm:text-left">
-              <h4 className="font-serif font-black text-foreground mb-4 sm:mb-6 text-base sm:text-lg">
-                {t("footer.products")}
-              </h4>
-              <ul className="space-y-2 sm:space-y-3 text-muted-foreground text-sm sm:text-base">
-                <li className="hover:text-primary transition-colors cursor-pointer">
-                  Natural Hair Oil
-                </li>
-                <li className="hover:text-primary transition-colors cursor-pointer">
-                  Sulfur-Free Formula
-                </li>
-                <li className="hover:text-primary transition-colors cursor-pointer">
-                  Hibiscus Blend
-                </li>
-                <li className="hover:text-primary transition-colors cursor-pointer">
-                  Coconut Oil Base
-                </li>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-muted/50 py-16 border-t border-border">
+        <div className="container">
+          <div className="grid md:grid-cols-4 gap-12 mb-12">
+            <div className="col-span-1 md:col-span-2 space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="relative w-10 h-10 rounded-full overflow-hidden">
+                  <Image src="/kp-header-logo.webp" alt="Logo" fill className="object-cover" />
+                </div>
+                <span className="font-serif font-bold text-xl">KP Naturals</span>
+              </div>
+              <p className="text-muted-foreground max-w-xs">{t("footer.tagline")}</p>
+            </div>
+
+            <div>
+              <h4 className="font-bold mb-6">{t("footer.products")}</h4>
+              <ul className="space-y-4 text-sm text-muted-foreground">
+                <li>Natural Hair Oil</li>
+                <li>Sulfur-Free Formula</li>
+                <li>Hibiscus Blend</li>
               </ul>
             </div>
-            <div className="text-center sm:text-left">
-              <h4 className="font-serif font-black text-foreground mb-4 sm:mb-6 text-base sm:text-lg">
-                {t("footer.support")}
-              </h4>
-              <ul className="space-y-2 sm:space-y-3 text-muted-foreground text-sm sm:text-base">
-                <li className="hover:text-primary transition-colors cursor-pointer">
-                  Contact: 6381248615
-                </li>
-                <li className="hover:text-primary transition-colors cursor-pointer">
-                  WhatsApp Support
-                </li>
-                <li className="hover:text-primary transition-colors cursor-pointer">
-                  Instagram: @kpnaturals.official
-                </li>
-                <li className="hover:text-primary transition-colors cursor-pointer">
-                  Usage Guidelines
-                </li>
-              </ul>
-            </div>
-            <div className="text-center sm:text-left">
-              <h4 className="font-serif font-black text-foreground mb-4 sm:mb-6 text-base sm:text-lg">
-                {t("footer.connect")}
-              </h4>
-              <ul className="space-y-2 sm:space-y-3 text-muted-foreground text-sm sm:text-base">
-                <li>
-                  <a
-                    href="https://instagram.com/kpnaturals.official"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-primary transition-colors"
-                  >
-                    Instagram
-                  </a>
-                </li>
-                <li>
-                  <button
-                    onClick={handleWhatsAppClick}
-                    className="hover:text-primary transition-colors text-left"
-                  >
-                    WhatsApp
-                  </button>
-                </li>
+
+            <div>
+              <h4 className="font-bold mb-6">{t("footer.support")}</h4>
+              <ul className="space-y-4 text-sm text-muted-foreground">
+                <li>Contact Us</li>
+                <li>Shipping Policy</li>
+                <li>Returns</li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-border/50 mt-12 sm:mt-16 pt-6 sm:pt-8 text-center text-muted-foreground">
-            <p className="font-medium text-sm sm:text-base">
-              &copy; 2024 KP Naturals. {t("footer.rights")}
-            </p>
+
+          <div className="pt-8 border-t border-border text-center text-sm text-muted-foreground">
+            &copy; 2024 KP Naturals. {t("footer.rights")}
           </div>
         </div>
       </footer>
@@ -613,3 +368,4 @@ export default function HomePage() {
     </div>
   );
 }
+
